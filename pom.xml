@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>br.uefs.larsid.dlt.iot.soft</groupId>
+    <artifactId>SOFT-IoT-DLT-Load-Monitor</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>bundle</packaging>
+
+    <name>SOFT-IoT-DLT-Load-Monitor</name>
+    <description>SOFT-IoT-DLT-Load-Monitor OSGi blueprint bundle project.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>br.uefs.larsid.dlt.iot.soft</groupId>
+            <artifactId>SOFT-IoT-DLT-Client-Tangle</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        
+         <dependency>
+            <groupId>br.uefs.larsid.dlt.iot.soft</groupId>
+            <artifactId>SOFT-IoT-DLT-Auth</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        
+    </dependencies>
+    
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>5.1.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <Export-Package>dlt.load.monitor.*</Export-Package>
+                        <Private-Package>dlt.load.monitor.*</Private-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <maxmem>256M</maxmem>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+        
+    <repositories>
+        <repository>
+            <id>soft-iot-dlt-client-tangle-mvn-repo</id>
+            <url>https://raw.github.com/larsid/soft-iot-dlt-client-tangle/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+</project>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="
+             http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd
+             http://www.osgi.org/xmlns/blueprint/v1.0.0 https://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <cm:property-placeholder
+        persistent-id="soft.iot.dlt.load.monitor"
+        update-strategy="reload">
+        <cm:default-properties>
+            <cm:property name="SAMPLING_INTERVAL" value="1000" />
+            <cm:property name="SAMPLING" value="10" />
+            <cm:property name="LOAD_LIMIT" value="90" />
+            <cm:property name="ID_GATEWAY" value="1" />
+            <cm:property name="TAG_GATEWAY" value="cloud1/fog" />
+            
+          
+        </cm:default-properties>
+    </cm:property-placeholder>
+    
+    <reference id="ledgerWriterService" interface="dlt.client.tangle.services.ILedgerWriter"/>
+    <reference id="deviceManagerService" interface="dlt.auth.services.IDevicePropertiesManager"/>
+    
+    
+    <bean id="ledgerConnector" class="dlt.load.monitor.model.LedgerConnector">
+        <property name="ledgerWriter" ref="ledgerWriterService"/>
+    </bean>
+    
+    <bean id="processor" class="dlt.load.monitor.model.Processor">
+        <argument value="${LOAD_LIMIT}"/>
+        <argument value="${ID_GATEWAY}"/>
+        <argument value="${TAG_GATEWAY}"/>
+        <property name="connector" ref="ledgerConnector"/>
+    </bean>
+    
+    <service id="IProcessorService" ref="processor" interface="dlt.load.monitor.services.IProcessor"/>
+    
+    <bean
+        id="loadMonitor"
+        class="dlt.load.monitor.model.LoadMonitor"
+        init-method="start"
+        destroy-method="stop">
+        <argument value="${SAMPLING_INTERVAL}"/>
+        <argument value="${SAMPLING}"/>
+        <property name="processor" ref="processor"/>
+        <property name="deviceManager" ref="deviceManagerService"/>
+        
+    </bean> 
+</blueprint>
