@@ -10,9 +10,9 @@
         persistent-id="soft.iot.dlt.load.monitor"
         update-strategy="reload">
         <cm:default-properties>
-            <cm:property name="SAMPLING_INTERVAL" value="1000" />
+            <cm:property name="SAMPLING_INTERVAL" value="5" />
             <cm:property name="SAMPLING" value="10" />
-            <cm:property name="LOAD_LIMIT" value="90" />
+            <cm:property name="LOAD_LIMIT" value="10" />
             <cm:property name="ID_GATEWAY" value="1" />
             <cm:property name="TAG_GATEWAY" value="cloud1/fog" />
             

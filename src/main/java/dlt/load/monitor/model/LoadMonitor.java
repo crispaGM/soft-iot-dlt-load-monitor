@@ -44,11 +44,17 @@ public class LoadMonitor implements Runnable {
     
     public void setDeviceManager(IDevicePropertiesManager deviceManager) {
         this.deviceManager = deviceManager;
+        System.out.println("IDevice Injetado");
+
     }
 
     public void start() {
-        this.executor.scheduleAtFixedRate(this, 0, this.samplingInterval, TimeUnit.SECONDS);
-    	run(); 
+        System.out.println(this.samplingInterval);
+
+        System.out.println("Antes do schedule");
+    	this.executor.scheduleAtFixedRate(this, 0, this.samplingInterval, TimeUnit.SECONDS);
+        System.out.println("Depois do schedule");
+
     }
 
     public void stop() {
@@ -56,14 +62,8 @@ public class LoadMonitor implements Runnable {
 
     @Override
     public void run() {
-       Long startTime;
-       Long currentTime;
-       while(parada) {
-  		  startTime = System.currentTimeMillis();
-  		  currentTime = System.currentTimeMillis();;
-  		while((currentTime- startTime) < samplingInterval){
-  			currentTime = System.currentTimeMillis();
-  		}
+        System.out.println("Dentro do Run");
+
   		try {
 			getLoad();
 		} catch (InterruptedException e) {
@@ -72,17 +72,17 @@ public class LoadMonitor implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 		
-  	}
+  	
     }
 	private void getLoad() throws InterruptedException, IOException {
         int qtdDevices;
 		try {
 			qtdDevices = this.deviceManager.getAllDevices().size();
-			samples.add(qtdDevices);
+			System.out.println("Quantidade de devices");
+			System.out.println(qtdDevices);
 			this.processor.updateBrokerStatus(qtdDevices);
-			if(samples.size() == sampling) {
-				samples.remove();
-			}
+			stop();
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

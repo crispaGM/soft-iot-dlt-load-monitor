@@ -15,6 +15,8 @@ import dlt.client.tangle.services.ILedgerWriter;
  * @version 0.0.1
  */
 public class LedgerConnector {
+	final String  loggerDir = "src\\main\\java\\dlt\\load\\monitor\\model\\Log\\LoadMonitorLogger.txt";
+
     private ILedgerWriter ledgerWriter;
     Logger logger;
     FileHandler fh;
@@ -26,7 +28,7 @@ public class LedgerConnector {
     public void initLogger() {
         logger = Logger.getLogger("Ledger Connector Log");  
            try {
-   			fh = new FileHandler("LedgerConnectorLogFile.log");
+   			fh = new FileHandler("./LoadMonitorLogger.txt");
    		} catch (SecurityException e) {
    			// TODO Auto-generated catch block
    			e.printStackTrace();
@@ -44,6 +46,8 @@ public class LedgerConnector {
     public void setLedgerWriter(ILedgerWriter ledgerWriter){
         this.ledgerWriter = ledgerWriter;
         System.out.println("LedgerWriter injected");
+        logger.info("LedgerWriter injected");  
+
     }
     
     public void put (int lastCharge, boolean lbEntry, String source) throws InterruptedException {
@@ -52,15 +56,19 @@ public class LedgerConnector {
     	transaction.setTimestamp(System.currentTimeMillis());
     	transaction.setLbEntry(lbEntry);
     	transaction.setSource(source);
-    	if(lbEntry)
+    	if(lbEntry) {
     		transaction.setType(TransactionType.LB_ENTRY);
+    		System.out.println("SOBRECARREGADO");
+    	}
     	else {
     		transaction.setType(TransactionType.LB_STATUS);
     		
-        logger.info(transaction.toString());  
+        logger.info("[New Transaction] "+transaction.toString());  
 	
 
     	}
     	this.ledgerWriter.put(transaction);
+		System.out.println("Transação enviada");
+
     }
 }
